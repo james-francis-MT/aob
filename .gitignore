@@ -26,4 +26,4 @@ go.work
 tmp/
 
 # Binary in root
-aob
+/aob
