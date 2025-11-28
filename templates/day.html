@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day {{.Day.Number}} - Advent Calendar</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="snow"></div>
+
+    <header>
+        <h1>🎄 Day {{.Day.Number}} 🎄</h1>
+    </header>
+
+    <main>
+        <div class="day-content">
+            <div class="content-box">
+                {{.Day.Content}}
+            </div>
+
+            <div class="back-link">
+                <a href="/">← Back to Calendar</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Made with ❤️</p>
+    </footer>
+</body>
+</html>

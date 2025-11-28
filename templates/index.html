@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advent Calendar</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="snow"></div>
+
+    <header>
+        <h1>🎄 Advent Calendar 🎄</h1>
+        <p class="subtitle">Open a door each day!</p>
+    </header>
+
+    <main>
+        <div class="calendar-grid">
+            {{range .Days}}
+            <div class="door {{if .Unlocked}}unlocked{{else}}locked{{end}}"
+                 {{if .Unlocked}}onclick="window.location.href='/day/{{.Number}}'"{{end}}>
+                <div class="door-front">
+                    <span class="door-number">{{.Number}}</span>
+                    {{if not .Unlocked}}
+                    <span class="lock-icon">🔒</span>
+                    {{end}}
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </main>
+
+    <footer>
+        <p>Made with ❤️</p>
+    </footer>
+</body>
+</html>
