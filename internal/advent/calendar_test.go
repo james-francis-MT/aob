@@ -75,15 +75,16 @@ func TestCalendar_New(t *testing.T) {
 	// Act: Create a new calendar
 	calendar := NewCalendar(year, contentDir)
 
-	// Assert: Calendar should have 25 days
-	if len(calendar.Days) != 25 {
-		t.Errorf("Expected calendar to have 25 days, got %d", len(calendar.Days))
+	// Assert: Calendar should have 12 days
+	if len(calendar.Days) != 12 {
+		t.Errorf("Expected calendar to have 12 days, got %d", len(calendar.Days))
 	}
 
-	// Assert: Each day should have the correct date
+	// Assert: Each day should have the correct date (starting from December 13th)
 	for i, day := range calendar.Days {
 		expectedDayNum := i + 1
-		expectedDate := time.Date(year, time.December, expectedDayNum, 0, 0, 0, 0, time.Local)
+		expectedDecemberDay := i + 13 // Day 1 = Dec 13, Day 2 = Dec 14, ..., Day 12 = Dec 24
+		expectedDate := time.Date(year, time.December, expectedDecemberDay, 0, 0, 0, 0, time.Local)
 
 		if day.Number != expectedDayNum {
 			t.Errorf("Day %d: Expected Number to be %d, got %d", i, expectedDayNum, day.Number)
@@ -100,7 +101,7 @@ func TestCalendar_New(t *testing.T) {
 	}
 
 	// Assert: Day 2 should have default content (no file created)
-	expectedDefault := "Happy Advent! 🎄"
+	expectedDefault := "Merry Christmas! 🎄"
 	if calendar.Days[1].Content != expectedDefault {
 		t.Errorf("Expected day 2 content '%s', got '%s'", expectedDefault, calendar.Days[1].Content)
 	}
@@ -142,7 +143,7 @@ func TestDay_LoadContent_FileNotExists(t *testing.T) {
 	if err != nil {
 		t.Errorf("Expected no error, got: %v", err)
 	}
-	expectedDefault := "Happy Advent! 🎄"
+	expectedDefault := "Merry Christmas! 🎄"
 	if day.Content != expectedDefault {
 		t.Errorf("Expected default content '%s', got '%s'", expectedDefault, day.Content)
 	}

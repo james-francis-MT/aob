@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// Day represents a single day in the advent calendar
+// Day represents a single day in the 12-day countdown to Christmas
 type Day struct {
 	Number   int
 	Date     time.Time
@@ -25,24 +25,27 @@ func (d *Day) LoadContent(contentDir string) error {
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		// File doesn't exist, use default content
-		d.Content = "Happy Advent! 🎄"
+		d.Content = "Merry Christmas! 🎄"
 		return nil
 	}
 	d.Content = string(content)
 	return nil
 }
 
-// Calendar represents an advent calendar with 25 days
+// Calendar represents a 12-day countdown calendar to Christmas
 type Calendar struct {
 	Days []Day
 }
 
-// NewCalendar creates a new advent calendar for the specified year
+// NewCalendar creates a new 12-day countdown calendar for the specified year
+// Day 1 starts on December 13th, Day 12 ends on December 24th (Christmas Eve)
 func NewCalendar(year int, contentDir string) *Calendar {
-	days := make([]Day, 25)
-	for i := 0; i < 25; i++ {
+	days := make([]Day, 12)
+	for i := 0; i < 12; i++ {
 		dayNum := i + 1
-		date := time.Date(year, time.December, dayNum, 0, 0, 0, 0, time.Local)
+		// Day 1 = December 13, Day 2 = December 14, ..., Day 12 = December 24
+		decemberDay := i + 13
+		date := time.Date(year, time.December, decemberDay, 0, 0, 0, 0, time.Local)
 		days[i] = Day{
 			Number: dayNum,
 			Date:   date,
