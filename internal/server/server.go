@@ -61,7 +61,7 @@ func (s *Server) handleDay(w http.ResponseWriter, r *http.Request) {
 	// Extract day number from URL path
 	path := strings.TrimPrefix(r.URL.Path, "/day/")
 	dayNum, err := strconv.Atoi(path)
-	if err != nil || dayNum < 1 || dayNum > 25 {
+	if err != nil || dayNum < 1 || dayNum > 13 {
 		http.Error(w, "Invalid day number", http.StatusBadRequest)
 		return
 	}
