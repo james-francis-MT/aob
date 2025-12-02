@@ -3,6 +3,7 @@ package advent
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -21,7 +22,30 @@ func (d *Day) CheckUnlocked() {
 
 // LoadContent loads the content for this day from the specified directory
 func (d *Day) LoadContent(contentDir string) error {
-	filePath := fmt.Sprintf("%s/day%d.txt", contentDir, d.Number)
+	// Validate day number to prevent path traversal and invalid access
+	if d.Number < 1 || d.Number > 12 {
+		return fmt.Errorf("invalid day number: %d (must be between 1 and 12)", d.Number)
+	}
+
+	// Use filepath.Join for safe path construction
+	filePath := filepath.Join(contentDir, fmt.Sprintf("day%d.txt", d.Number))
+
+	// Validate that the resulting path is within contentDir
+	absContentDir, err := filepath.Abs(contentDir)
+	if err != nil {
+		return fmt.Errorf("failed to resolve content directory: %w", err)
+	}
+	absFilePath, err := filepath.Abs(filePath)
+	if err != nil {
+		return fmt.Errorf("failed to resolve file path: %w", err)
+	}
+
+	// Check that the file path is within the content directory
+	relPath, err := filepath.Rel(absContentDir, absFilePath)
+	if err != nil || len(relPath) > 0 && relPath[0] == '.' && relPath[1] == '.' {
+		return fmt.Errorf("invalid file path: attempted directory traversal")
+	}
+
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		// File doesn't exist, use default content
@@ -51,7 +75,9 @@ func NewCalendar(year int, contentDir string) *Calendar {
 			Date:   date,
 		}
 		days[i].CheckUnlocked()
-		days[i].LoadContent(contentDir)
+		// LoadContent should never error here since dayNum is always 1-12
+		// Error is only returned for validation failures with invalid day numbers
+		_ = days[i].LoadContent(contentDir)
 	}
 	return &Calendar{Days: days}
 }

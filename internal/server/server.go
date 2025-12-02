@@ -19,7 +19,7 @@ type Server struct {
 }
 
 // New creates a new server
-func New(calendar *advent.Calendar, templateDir string, staticDir string) *Server {
+func New(calendar *advent.Calendar, templateDir string, staticDir string) (*Server, error) {
 	s := &Server{
 		calendar:    calendar,
 		templateDir: templateDir,
@@ -28,7 +28,11 @@ func New(calendar *advent.Calendar, templateDir string, staticDir string) *Serve
 	}
 
 	// Parse templates
-	s.templates = template.Must(template.ParseGlob(templateDir + "/*.html"))
+	templates, err := template.ParseGlob(templateDir + "/*.html")
+	if err != nil {
+		return nil, err
+	}
+	s.templates = templates
 
 	// Register routes
 	s.mux.HandleFunc("/", s.handleHome)
@@ -40,7 +44,7 @@ func New(calendar *advent.Calendar, templateDir string, staticDir string) *Serve
 		s.mux.Handle("/static/", http.StripPrefix("/static/", fileServer))
 	}
 
-	return s
+	return s, nil
 }
 
 // ServeHTTP implements http.Handler
@@ -61,7 +65,13 @@ func (s *Server) handleDay(w http.ResponseWriter, r *http.Request) {
 	// Extract day number from URL path
 	path := strings.TrimPrefix(r.URL.Path, "/day/")
 	dayNum, err := strconv.Atoi(path)
-	if err != nil || dayNum < 1 || dayNum > 13 {
+	if err != nil || dayNum < 1 || dayNum > 12 {
+		http.Error(w, "Invalid day number", http.StatusBadRequest)
+		return
+	}
+
+	// Defensive bounds check before array access
+	if dayNum-1 >= len(s.calendar.Days) || dayNum-1 < 0 {
 		http.Error(w, "Invalid day number", http.StatusBadRequest)
 		return
 	}

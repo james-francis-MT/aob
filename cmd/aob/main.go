@@ -16,7 +16,10 @@ func main() {
 	calendar := advent.NewCalendar(currentYear, "content")
 
 	// Create the server
-	srv := server.New(calendar, "templates", "static")
+	srv, err := server.New(calendar, "templates", "static")
+	if err != nil {
+		log.Fatalf("Failed to create server: %v", err)
+	}
 
 	// Start the HTTP server
 	addr := ":8080"

@@ -148,3 +148,45 @@ func TestDay_LoadContent_FileNotExists(t *testing.T) {
 		t.Errorf("Expected default content '%s', got '%s'", expectedDefault, day.Content)
 	}
 }
+
+func TestDay_LoadContent_InvalidDayNumber_Negative(t *testing.T) {
+	// Arrange: Create a day with negative number (defensive test)
+	contentDir := t.TempDir()
+	day := Day{Number: -1}
+
+	// Act: Try to load content
+	err := day.LoadContent(contentDir)
+
+	// Assert: Should return an error for invalid day number
+	if err == nil {
+		t.Error("Expected error for negative day number, got nil")
+	}
+}
+
+func TestDay_LoadContent_InvalidDayNumber_Zero(t *testing.T) {
+	// Arrange: Create a day with zero number (defensive test)
+	contentDir := t.TempDir()
+	day := Day{Number: 0}
+
+	// Act: Try to load content
+	err := day.LoadContent(contentDir)
+
+	// Assert: Should return an error for invalid day number
+	if err == nil {
+		t.Error("Expected error for zero day number, got nil")
+	}
+}
+
+func TestDay_LoadContent_InvalidDayNumber_TooLarge(t *testing.T) {
+	// Arrange: Create a day with number > 12 (defensive test)
+	contentDir := t.TempDir()
+	day := Day{Number: 100}
+
+	// Act: Try to load content
+	err := day.LoadContent(contentDir)
+
+	// Assert: Should return an error for invalid day number
+	if err == nil {
+		t.Error("Expected error for day number > 12, got nil")
+	}
+}
